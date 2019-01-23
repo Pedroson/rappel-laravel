@@ -9,15 +9,12 @@ import Register from './components/Register.vue';
 import Login from './components/Login.vue';
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
-axios.defaults.baseURL = 'http://localhost:8000/api';
+axios.defaults.baseURL = 'http://rappel.me/api';
 const router = new VueRouter({
     routes: [{
         path: '/',
         name: 'home',
-        component: Home,
-        meta: {
-            auth: false
-        }
+        component: Home
     },{
         path: '/register',
         name: 'register',

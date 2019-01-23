@@ -11,4 +11,4 @@
 |
 */
 
-Route::get('/', 'AppController@getApp');
+Route::get('/', 'Web\AppController@getApp');
