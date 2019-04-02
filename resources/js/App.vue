@@ -3,7 +3,7 @@
         <div class="panel-heading">
             <nav>
                 <ul class="list-inline">
-                    <li>
+                    <li v-if="this.$route.name != 'home'">
                         <router-link :to="{ name: 'home' }">Home</router-link>
                     </li>
                     <li v-if="!$auth.check()" class="pull-right">
@@ -23,3 +23,13 @@
         </div>
     </div>
 </template>
+
+<script>
+    export default {
+        methods: {
+            currentPage() {
+                return this.$route;
+            }
+        }
+    }
+</script>

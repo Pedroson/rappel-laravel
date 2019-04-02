@@ -13,3 +13,12 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
+.form-group {
+
+  &.has-error {
+    input, select {
+      border: 1px solid red;
+    }
+  }
+}
+
