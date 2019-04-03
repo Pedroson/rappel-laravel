@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import VeeValidate from 'vee-validate';
 import App from './App.vue';
 import Dashboard from './components/Dashboard.vue';
 import Home from './components/Home.vue';
@@ -9,6 +10,7 @@ import Register from './components/Register.vue';
 import Login from './components/Login.vue';
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
+Vue.use(VeeValidate, {events: 'input|blur'});
 axios.defaults.baseURL = 'http://rappel.me/api';
 const router = new VueRouter({
     routes: [{

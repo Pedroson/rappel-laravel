@@ -7,20 +7,21 @@
             <p>Registration completed. You can now <router-link :to="{name:'login'}">sign in.</router-link></p>
         </div>
         <form autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
-            <div class="form-group" v-bind:class="{ 'has-error': error && errors.name }">
+            <div class="form-group" v-bind:class="{ 'has-error': error && serverErrors.name && !name  }">
                 <label for="name">Name</label>
-                <input type="text" id="name" class="form-control" v-model="name">
-                <span class="help-block" v-if="error && errors.name">{{ errors.name }}</span>
+                <input type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|email'">
+                <span class="help-block" v-if="error && serverErrors.name && !name">{{ tidyError(serverErrors.name) }}</span>
+                <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
             </div>
-            <div class="form-group" v-bind:class="{ 'has-error': error && errors.email }">
+            <div class="form-group" v-bind:class="{ 'has-error': error && serverErrors.email && !email }">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email">
-                <span class="help-block" v-if="error && errors.email">{{ errors.email }}</span>
+                <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
             </div>
-            <div class="form-group" v-bind:class="{ 'has-error': error && errors.password }">
+            <div class="form-group" v-bind:class="{ 'has-error': error && serverErrors.password && !password }">
                 <label for="password">Password</label>
                 <input type="password" id="password" class="form-control" v-model="password">
-                <span class="help-block" v-if="error && errors.password">{{ errors.password }}</span>
+                <span class="help-block" v-if="error && serverErrors.password && !password">{{ tidyError(serverErrors.password) }}</span>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         </form>
@@ -35,7 +36,7 @@
                 email: '',
                 password: '',
                 error: false,
-                errors: {},
+                serverErrors: {},
                 success: false
             };
         },
@@ -53,10 +54,13 @@
                     },
                     error: function (resp) {
                         app.error = true;
-                        app.errors = resp.response.data.errors;
+                        app.serverErrors = resp.response.data.errors;
                     },
                     redirect: null
                 });
+            },
+            tidyError(error) {
+                return error[0];
             }
         }
     }
