@@ -3,6 +3,10 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu:700');
+@font-face {
+  font-family: ProductSans;
+  src: url('/fonts/ProductSans-Regular.woff');
+}
 
 // Variables
 @import 'variables';
@@ -17,29 +21,60 @@
 body {
   width: 100vw;
   height: 100vh;
+  font-size: 14px;
+}
+
+html, body, h1, h2, h3, h4, h5, span, p, div, label, li {
+  font-family: 'ProductSans';
 }
 
 section.main {
   width: 100vw;
   height: 100vh;
-  &.home {
+  position: relative;
+  &.home,
+  &.register,
+  &.login {
     background: $gradient;
   }
 
-  .header {
+  #header {
+    height: 100px;
+    padding-top: 15px;
+    a:hover {
+      text-decoration: none;
+    }
     h1.logo {
+      font-family: 'ProductSans';
       color: #fff;
     }
   }
 }
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+nav {
+  ul.list-inline {
+    li {
+      display: inline-block;
+      margin: 0px 10px;
+      a {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.rappel-corner {
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#body, .parent {
+  position: relative;
+  height: calc(100vh - 100px);
 }
 
 .form-group {
-
   &.has-error {
     input, select {
       border: 1px solid red;

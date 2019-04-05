@@ -6,7 +6,10 @@
         <div class="alert alert-success" v-if="success">
             <p>Registration completed. You can now <router-link :to="{name:'login'}">sign in.</router-link></p>
         </div>
-        <form autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
+        <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
+            <div class="form-header">
+                <p>Register</p>
+            </div>
             <div class="form-group" v-bind:class="{ 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
                 <label for="name">Name</label>
                 <input type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
@@ -77,147 +80,35 @@
 </script>
 
 <style lang="scss">
-    @import '~@/app.scss';
+    form#register {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        background: #fff;
 
-    .rappel-corner {
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-        border-top-right-radius: 10px;
-    }
-
-    .rappel-button-corners {
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-    }
-
-    .center--all {
-        @include absoluteCenter();
-    }
-
-    .center--v {
-        @include absoluteCenterY();
-    }
-
-    .center--h {
-        @include absoluteCenterX();
-    }
-
-    .form-group {
-        position: relative;
-        padding-top: 10px;
-
-        &.fixed-submit {
-            position: absolute;
-            bottom: 0px;
-            left: 0px;
-            margin-bottom: 0px;
-            width: 100%;
+        .form-header {
+            padding: 0px 10px;
+            p {
+                font-size: 1.5rem;
+            }
         }
 
-        &:not(.submit) {
-
-            &:after {
-                content: "";
-                display: block;
-                position: absolute;
-                bottom: 0px;
-                left: 0px;
-                width: 0%;
-                height: 1px;
-                background: #000;
-                transition: all 0.25s ease-in-out;
-                z-index: 2;
-            }
-
-            &.active {
-
-                &:after {
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    bottom: 0px;
-                    left: 0px;
-                    width: 100%;
-                    height: 1px;
-                    background: #000;
-                    transition: all 0.25s ease-in-out;
-                    z-index: 2;
+        .form-group {
+            position: relative;
+            padding: 0px 10px;
+            &.has-error {
+                input {
+                    border-bottom-color: #8b0000;
                 }
             }
-        }
-
-        label {
-            position: absolute;
-            top: 20px;
-            left:5px;
-            font-size: 16px;
-            color: #a7a7a7;
-            transition: all 0.25s ease-in-out;
-            z-index: 1;
-
-            &.active {
-                font-size: 12px;
-                top: 0px;
-                left: 0px;
-                color: #000;
-                transition: all 0.25s ease-in-out;
+            input {
+                border-width: 0px;
+                border-bottom: 1px solid #1b1e21;
+                border-radius: 0px;
             }
         }
 
-        input[type="text"],
-        input[type="password"],
-        input[type="email"] {
-            width: 100%;
-            border-width: 0px;
-            border-bottom-width: 1px;
-            border-color: #a7a7a7;
-            height: 40px;
-            outline: none;
-        }
-    }
-
-    .button {
-        text-align: center;
-        border-width: 0px;
-        color: #fff;
-        padding: 10px 20px;
-        height: 60px;
-
-        &--full {
-            width: 100%;
-        }
-
-        &--green {
-            background: $green;
-
-            &:hover {
-                background: darken($green, 10%);
-                transition: background-color 0.25s ease-in-out;
-
-            }
-        }
-
-        &--fixed-bottom {
-            position: absolute;
-            bottom:0px;
-            left: 0px;
-            margin-bottom: 0px;
-            margin-top: 60px;
-        }
-    }
-
-    .fixed-submit-container {
-        position: relative;
-        padding-bottom: 80px;
-    }
-
-    .form-error {
-        color: #b4000d;
-        margin-bottom: 15px;
-    }
-
-    span.validation-error {
-        color: #b36c6f;
-        font-size: 12px;
     }
 </style>
