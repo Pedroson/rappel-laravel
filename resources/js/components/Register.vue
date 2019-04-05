@@ -9,7 +9,7 @@
         <form autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
             <div class="form-group" v-bind:class="{ 'has-error': error && serverErrors.name && !name  }">
                 <label for="name">Name</label>
-                <input type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|email'">
+                <input type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required'">
                 <span class="help-block" v-if="error && serverErrors.name && !name">{{ tidyError(serverErrors.name) }}</span>
                 <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
             </div>
