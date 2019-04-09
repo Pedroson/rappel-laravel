@@ -19,7 +19,7 @@
 
 //Core Styles
 body {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   font-size: 14px;
 }
@@ -29,8 +29,8 @@ html, body, h1, h2, h3, h4, h5, span, p, div, label, li {
 }
 
 section.main {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: relative;
   &.home,
   &.register,
@@ -71,7 +71,7 @@ nav {
 
 #body, .parent {
   position: relative;
-  height: calc(100vh - 100px);
+  height: calc(100% - 100px);
 }
 
 .form-group {

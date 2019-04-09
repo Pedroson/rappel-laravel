@@ -10,25 +10,25 @@
             <div class="form-header">
                 <p>Register</p>
             </div>
-            <div class="form-group" v-bind:class="{ 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
+            <div class="form-group overlap" v-bind:class="{ 'active' : isActive, 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
                 <label for="name">Name</label>
-                <input type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
+                <input v-on:focus="isFocused($event)" v-on:blur="isFocused($event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
                 <span class="help-block" v-if="error && serverErrors.name && !name">{{ tidyError(serverErrors.name) }}</span>
                 <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
             </div>
-            <div class="form-group" v-bind:class="{ 'has-error': (error && serverErrors.email && !email) || errors.has('email') }">
+            <div class="form-group overlap" v-bind:class="{ 'has-error': (error && serverErrors.email && !email) || errors.has('email') }">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" class="form-control" name="email" v-model="email" v-validate="'required|email'">
                 <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
                 <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
             </div>
-            <div class="form-group" v-bind:class="{ 'has-error': (error && serverErrors.password && !password) || errors.has('password') }">
+            <div class="form-group overlap" v-bind:class="{ 'has-error': (error && serverErrors.password && !password) || errors.has('password') }">
                 <label for="password">Password</label>
                 <input type="password" id="password" class="form-control" name="password" v-model="password" v-validate="'required|min:6|max:10'" ref="password">
                 <span class="help-block" v-if="error && serverErrors.password && !password">{{ tidyError(serverErrors.password) }}</span>
                 <span class="help-block" v-if="errors.has('password')">{{ errors.first('password') }}</span>
             </div>
-            <div class="form-group" v-bind:class="{ 'has-error': (error && serverErrors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
+            <div class="form-group overlap" v-bind:class="{ 'has-error': (error && serverErrors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
                 <label for="password_confirm">Password Confirm</label>
                 <input type="password" id="password_confirm" class="form-control" name="password_confirm" v-model="password_confirm" v-validate="'required|min:6|max:10|confirmed:password'" data-vv-as="password">
                 <span class="help-block" v-if="error && serverErrors.password_confirm && !password_confirm">{{ tidyError(serverErrors.password_confirm) }}</span>
@@ -49,7 +49,8 @@
                 password_confirm: '',
                 error: false,
                 serverErrors: {},
-                success: false
+                success: false,
+                isActive: false
             };
         },
         methods: {
@@ -74,6 +75,9 @@
             },
             tidyError(error) {
                 return error[0];
+            },
+            isFocused($event) {
+                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this.name;
             }
         }
     }
@@ -98,6 +102,25 @@
         .form-group {
             position: relative;
             padding: 0px 10px;
+
+            &.overlap {
+                position: relative;
+
+                label {
+                    position: absolute;
+                    top: 10px;
+                    left: 20px;
+                    font-size: 1rem;
+                }
+
+                &.active {
+                    label {
+                        top: 0px;
+                        left: 10px;
+                        font-size: 0.75rem;
+                    }
+                }
+            }
             &.has-error {
                 input {
                     border-bottom-color: #8b0000;
