@@ -10,15 +10,15 @@
             <div class="form-header">
                 <p>Register</p>
             </div>
-            <div class="form-group overlap" v-bind:class="{ 'active' : isActive, 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
+            <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
                 <label for="name">Name</label>
-                <input v-on:focus="isFocused($event)" v-on:blur="isFocused($event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
+                <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
                 <span class="help-block" v-if="error && serverErrors.name && !name">{{ tidyError(serverErrors.name) }}</span>
                 <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
             </div>
-            <div class="form-group overlap" v-bind:class="{ 'has-error': (error && serverErrors.email && !email) || errors.has('email') }">
+            <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.email && !email) || errors.has('email') }">
                 <label for="email">E-mail</label>
-                <input type="email" id="email" class="form-control" name="email" v-model="email" v-validate="'required|email'">
+                <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" class="form-control" name="email" v-model="email" v-validate="'required|email'">
                 <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
                 <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
             </div>
@@ -50,7 +50,8 @@
                 error: false,
                 serverErrors: {},
                 success: false,
-                isActive: false
+                isActive: false,
+                index: false,
             };
         },
         methods: {
@@ -76,7 +77,8 @@
             tidyError(error) {
                 return error[0];
             },
-            isFocused($event) {
+            isFocused($name, $event) {
+                this.index = $name;
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this.name;
             }
         }
