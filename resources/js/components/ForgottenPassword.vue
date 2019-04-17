@@ -4,19 +4,13 @@
             <p>There was an error, unable to sign in with those credentials.</p>
         </div>
         <div class="form-container">
-            <h1>Login</h1>
-            <form id="login" class="rappel-corner" autocomplete="off" @submit.prevent="login" method="post">
+            <h1>Forgotten Password</h1>
+            <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.name && !email) ||  errors.has('email') }">
                     <label for="email">E-mail</label>
                     <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" name="email" class="form-control" v-model="email" v-validate="'required|email'">
                     <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
                     <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
-                </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.name && !passsword) ||  errors.has('password') }">
-                    <label for="password">Password</label>
-                    <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" name="password" class="form-control" v-model="password" v-validate="'required'">
-                    <span class="help-block" v-if="error && serverErrors.password && !password">{{ tidyError(serverErrors.password) }}</span>
-                    <span class="help-block" v-if="errors.has('password')">{{ errors.first('password') }}</span>
                 </div>
                 <div class="form-group-button">
                     <button type="submit" class="btn btn-default btn-full">Sign in</button>
@@ -41,7 +35,7 @@
             }
         },
         methods: {
-            login(){
+            forgottenPassword(){
                 var app = this
                 this.$auth.login({
                     params: {

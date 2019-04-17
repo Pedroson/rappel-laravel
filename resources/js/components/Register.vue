@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div class="alert alert-danger" v-if="error && !success">
+        <div class="alert alert-danger rappel-corner" v-if="error && !success">
             <p>There was an error, unable to complete registration.</p>
         </div>
-        <div class="alert alert-success" v-if="success">
+        <div class="alert alert-success rappel-corner" v-if="success">
             <p>Registration completed. You can now <router-link :to="{name:'login'}">sign in.</router-link></p>
         </div>
         <div class="form-container">
             <h1>Register</h1>
-            <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
+            <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" method="post">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
                     <label for="name">Name</label>
                     <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
@@ -67,7 +67,11 @@
                         password_confirm: app.password_confirm
                     },
                     success: function () {
-                        app.success = true
+                        app.success = true;
+                        app.name = '';
+                        app.email = '';
+                        app.password = '';
+                        app.password_confirm = '';
                     },
                     error: function (resp) {
                         app.error = true;

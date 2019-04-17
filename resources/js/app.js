@@ -31,7 +31,11 @@ const router = new VueRouter({
         meta: {
             auth: false
         }
-    },{
+    }, {
+        path: '/forgotten-password',
+        name: 'forgotten-password',
+        component : ForgottenPassword,
+    }, {
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard,

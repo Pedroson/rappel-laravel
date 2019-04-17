@@ -34,7 +34,8 @@ section.main {
   position: relative;
   &.home,
   &.register,
-  &.login {
+  &.login,
+  &.dashboard {
     background: $gradient;
   }
 
@@ -64,6 +65,7 @@ nav {
 }
 
 .rappel-corner {
+  border-top-left-radius: 0px;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -74,6 +76,8 @@ nav {
   height: calc(100% - 100px);
 }
 
+
+// FORM STUFF
 .form-group {
   &.has-error {
     input, select {
@@ -85,5 +89,19 @@ nav {
 .form-group span.help-block {
   margin-top: 0.5rem;
   display: block;
+}
+
+//OVERRIDE BOOTSTRAP ALERT STYLE
+.alert {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: calc(100% - 4rem);
+  @include tablet {
+    width: 220px;
+  }
+  @include desktop {
+    width: 300px;
+  }
 }
 
