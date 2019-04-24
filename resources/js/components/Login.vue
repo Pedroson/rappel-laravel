@@ -22,6 +22,7 @@
                     <button type="submit" class="btn btn-default btn-full">Sign in</button>
                 </div>
             </form>
+            <router-link :to="{ name: 'forgotten-password' }">forgotten password?</router-link>
         </div>
 
     </div>
@@ -63,7 +64,7 @@
             },
             isFocused($name, $event) {
                 this.index = $name;
-                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this.name;
+                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
         }
     }

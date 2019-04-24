@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="alert alert-danger" v-if="error">
-            <p>There was an error, unable to sign in with those credentials.</p>
+            <p>{{ serverErrors }}</p>
         </div>
         <div class="form-container">
             <h1>Forgotten Password</h1>
@@ -13,7 +13,7 @@
                     <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
                 </div>
                 <div class="form-group-button">
-                    <button type="submit" class="btn btn-default btn-full">Sign in</button>
+                    <button type="submit" class="btn btn-default btn-full">Send</button>
                 </div>
             </form>
         </div>
@@ -37,27 +37,24 @@
         methods: {
             forgottenPassword(){
                 var app = this
-                this.$auth.login({
-                    params: {
-                        email: app.email,
-                        password: app.password
-                    },
-                    success: function () {},
-                    error: function () {
-                        app.error = true;
-                        app.serverErrors = resp.response.data.errors;
-                    },
-                    rememberMe: true,
-                    redirect: '/dashboard',
-                    fetchUser: true,
-                });
+                this.axios.post('/auth/forgotten-password', {
+                    'email': app.email
+                })
+                  .then(function(resp) {
+                      app.success = true;
+                  })
+                  .catch(function(resp) {
+                      app.error = false;
+                      console.log(resp);
+                      app.serverErrors = resp.response.data.errors;
+                  });
             },
             tidyError(error) {
                 return error[0];
             },
             isFocused($name, $event) {
                 this.index = $name;
-                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this.name;
+                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
         }
     }
@@ -75,7 +72,7 @@
         }
 
 
-        form#login {
+        form#forgottenPassword {
             background: #fff;
             padding: 1.75rem 1rem 0 1rem;
         }

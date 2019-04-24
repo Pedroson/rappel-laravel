@@ -13,17 +13,19 @@ class PasswordReset extends Mailable
     use Queueable, SerializesModels;
 
     private $user;
-    private $resetLink;
+    private $token;
+    private $base_url;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, $resetLink)
+    public function __construct(User $user, $token)
     {
         $this->user = $user;
-        $this->resetLink = $resetLink;
+        $this->token = $token;
+        $this->base_url = env('APP_URL');
     }
 
     /**
@@ -37,7 +39,7 @@ class PasswordReset extends Mailable
             ->subject('Password Reset')
             ->view('emails.passwordreset', [
                 'user'  => $this->user,
-                'resetLink' => $this->resetLink
+                'resetLink' => $this->base_url . 'auth/reset-password/' . $this->token
             ]);
     }
 }

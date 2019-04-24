@@ -85,7 +85,7 @@
             },
             isFocused($name, $event) {
                 this.index = $name;
-                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this.name;
+                this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
         }
     }

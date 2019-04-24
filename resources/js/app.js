@@ -6,6 +6,7 @@ import VeeValidate from 'vee-validate';
 import App from './App.vue';
 import Dashboard from './components/Dashboard.vue';
 import Home from './components/Home.vue';
+import ForgottenPassword from './components/ForgottenPassword';
 import Register from './components/Register.vue';
 import Login from './components/Login.vue';
 Vue.use(VueRouter);

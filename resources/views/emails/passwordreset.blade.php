@@ -1,4 +1,4 @@
-<p>Dear, {{ $user->Name }}</p>
+<p>Dear, {{ $user->name }}</p>
 
 <p>If you have requested a password reset, please click the link below, to change your password</p>
 <p>{{ $resetLink }}</p>
