@@ -1,8 +1,15 @@
 <template>
     <div>
-        <div class="alert alert-danger" v-if="error">
-            <p>{{ serverErrors }}</p>
-        </div>
+        <transition name="fade">
+            <div class="alert alert-danger" v-if="error && alert">
+                <p>{{ serverErrors }}</p>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="alert alert-success" v-if="success && alert">
+                please check your inbox for next steps
+            </div>
+        </transition>
         <div class="form-container">
             <h1>Forgotten Password</h1>
             <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
@@ -32,6 +39,25 @@
                 success: false,
                 isActive: false,
                 index: false,
+                alert: false
+            }
+        },
+        watch: {
+            success: function(val) {
+                if(val === true) {
+                    var app = this;
+                    setTimeout(function() {
+                        app.alert = false;
+                    }, 3000);
+                }
+            },
+            error: function(val) {
+                if(val === true) {
+                    var app = this;
+                    setTimeout(function() {
+                        app.alert = false;
+                    }, 3000);
+                }
             }
         },
         methods: {
@@ -42,11 +68,12 @@
                 })
                   .then(function(resp) {
                       app.success = true;
+                      app.alert = true;
                   })
                   .catch(function(resp) {
-                      app.error = false;
-                      console.log(resp);
-                      app.serverErrors = resp.response.data.errors;
+                      app.error = true;
+                      app.alert = true;
+                      app.serverErrors = resp.response.data.msg;
                   });
             },
             tidyError(error) {
@@ -62,6 +89,13 @@
 
 <style lang="scss">
     @import '~@/app.scss';
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
 
     .form-container {
         @include absoluteCenter;

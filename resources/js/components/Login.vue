@@ -50,7 +50,7 @@
                         password: app.password
                     },
                     success: function () {},
-                    error: function () {
+                    error: function (resp) {
                         app.error = true;
                         app.serverErrors = resp.response.data.errors;
                     },

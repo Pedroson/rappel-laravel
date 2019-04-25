@@ -40,9 +40,9 @@ class AuthController extends Controller
         if(!$token = JWTAuth::attempt($credentials))
         {
             return response([
-                'status' => 'error',
-                'error' => 'invalid.credentials',
-                'msg' => 'Invalid Credentials.'
+                'status'    => 'error',
+                'error'     => 'invalid.credentials',
+                'msg'       => 'Invalid Credentials.'
             ], 400);
         }
 
@@ -58,8 +58,8 @@ class AuthController extends Controller
         JWTAuth::invalidate();
 
         return response([
-            'status' => 'success',
-            'msg' => 'Logged out Successfully.'
+            'status'    => 'success',
+            'msg'       => 'Logged out Successfully.'
         ], 200);
     }
 
@@ -67,8 +67,8 @@ class AuthController extends Controller
     {
         $user = User::find(Auth::user()->id);
         return response([
-            'status' => 'success',
-            'data' => $user
+            'status'    => 'success',
+            'data'      => $user
         ]);
     }
 
@@ -87,9 +87,9 @@ class AuthController extends Controller
         if(!$user)
         {
             return response([
-                'status' => 'error',
-                'msg'   => 'email not recognised'
-            ]);
+                'status'    => 'error',
+                'msg'       => 'email not recognised'
+            ], 400);
         }
 
         $token = Hash::make('reset' . time() . $request->email . rand(0, 20));
@@ -103,8 +103,8 @@ class AuthController extends Controller
         Mail::to($user)->send(new PasswordReset($user, $token));
 
         return response([
-            'status' => 'success',
-            'msg'   => 'a password reset email has been sent'
+            'status'    => 'success',
+            'msg'       => 'a password reset email has been sent'
         ]);
 
     }
