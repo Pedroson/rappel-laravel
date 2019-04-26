@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -93,6 +94,7 @@ class AuthController extends Controller
         }
 
         $token = Hash::make('reset' . time() . $request->email . rand(0, 20));
+        $token = str_replace('/', '', $token);
 
         DB::table('password_resets')->insert([
             'email'         => $request->email,
@@ -107,5 +109,41 @@ class AuthController extends Controller
             'msg'       => 'a password reset email has been sent'
         ]);
 
+    }
+
+    public function checkTokenValidity($token)
+    {
+        $validity = null;
+
+        $tokenDate = DB::table('password_resets')
+            ->select('created_at')
+            ->where('token', $token)
+            ->first();
+
+        if($tokenDate)
+        {
+            $expiryDate = Carbon::now()->subMinute(15);
+            if($tokenDate->created_at < $expiryDate)
+            {
+                return response([
+                    'status'    => 'error',
+                    'msg'       => 'token expired'
+                ], 400);
+            }
+            else
+            {
+                return response([
+                    'status'    => 'success',
+                    'msg'       => 'token valid'
+                ]);
+            }
+        }
+        else
+        {
+            return response([
+                'status'    => 'error',
+                'msg'       => 'token not recognised'
+            ], 400);
+        }
     }
 }

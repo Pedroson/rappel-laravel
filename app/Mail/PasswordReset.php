@@ -35,11 +35,11 @@ class PasswordReset extends Mailable
      */
     public function build()
     {
-        return $this->from('noreply@rappel.co.uk')
+        return $this->from('noreply@rappel.me')
             ->subject('Password Reset')
             ->view('emails.passwordreset', [
                 'user'  => $this->user,
-                'resetLink' => $this->base_url . 'auth/reset-password/' . $this->token
+                'resetLink' => $this->base_url . '/#/reset-password/' . $this->token
             ]);
     }
 }

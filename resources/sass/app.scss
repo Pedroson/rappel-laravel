@@ -36,7 +36,8 @@ section.main {
   &.register,
   &.login,
   &.dashboard,
-  &.forgotten-password {
+  &.forgotten-password,
+  &.reset-password {
     background: $gradient;
   }
 

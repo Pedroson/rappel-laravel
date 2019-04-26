@@ -11,16 +11,22 @@
             </div>
         </transition>
         <div class="form-container">
-            <h1>Forgotten Password</h1>
-            <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.name && !email) ||  errors.has('email') }">
-                    <label for="email">E-mail</label>
-                    <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" name="email" class="form-control" v-model="email" v-validate="'required|email'">
-                    <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
-                    <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
+            <h1>Reset Password</h1>
+            <form id="resetPassword" class="rappel-corner" autocomplete="off" @submit.prevent="resetPassword" method="post">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.password && !password) || errors.has('password') }">
+                    <label for="password">Password</label>
+                    <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" class="form-control" name="password" v-model="password" v-validate="'required|min:6|max:10'" ref="password">
+                    <span class="help-block" v-if="error && serverErrors.password && !password">{{ tidyError(serverErrors.password) }}</span>
+                    <span class="help-block" v-if="errors.has('password')">{{ errors.first('password') }}</span>
+                </div>
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password_confirm') || isActive && password_confirm, 'has-error': (error && serverErrors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
+                    <label for="password_confirm">Password Confirm</label>
+                    <input v-on:focus="isFocused('password_confirm', $event)" v-on:blur="isFocused('password_confirm', $event)" type="password" id="password_confirm" class="form-control" name="password_confirm" v-model="password_confirm" v-validate="'required|min:6|max:10|confirmed:password'" data-vv-as="password">
+                    <span class="help-block" v-if="error && serverErrors.password_confirm && !password_confirm">{{ tidyError(serverErrors.password_confirm) }}</span>
+                    <span class="help-block" v-if="errors.has('password_confirm')">{{ errors.first('password_confirm') }}</span>
                 </div>
                 <div class="form-group-button">
-                    <button type="submit" class="btn btn-default btn-full">Send</button>
+                    <button type="submit" class="btn btn-default btn-full">Reset Password</button>
                 </div>
             </form>
         </div>
@@ -32,13 +38,19 @@
     export default {
         data(){
             return {
-                email: null,
+                password: null,
+                password_confirm: null,
                 error: false,
                 serverErrors: {},
                 success: false,
                 isActive: false,
                 index: false,
                 alert: false
+            }
+        },
+        computed: {
+            token() {
+                return this.$route.params.token;
             }
         },
         watch: {
@@ -60,7 +72,7 @@
             }
         },
         methods: {
-            forgottenPassword(){
+            resetPassword(){
                 var app = this
                 this.axios.post('/auth/forgotten-password', {
                     'email': app.email
@@ -82,6 +94,16 @@
                 this.index = $name;
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
+        },
+        mounted () {
+            var app = this;
+            this.axios.get('/auth/check-token-validity/'+this.token)
+              .then(function(resp) {
+                  console.log(resp);
+              })
+              .catch(function(resp) {
+                  app.$router.push('/forgotten-password');
+              });
         }
     }
 </script>
@@ -105,7 +127,7 @@
         }
 
 
-        form#forgottenPassword {
+        form#resetPassword {
             background: #fff;
             padding: 1.75rem 1rem 0 1rem;
         }

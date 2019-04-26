@@ -7,6 +7,7 @@ import App from './App.vue';
 import Dashboard from './components/Dashboard.vue';
 import Home from './components/Home.vue';
 import ForgottenPassword from './components/ForgottenPassword';
+import ResetPassword from './components/ResetPassword';
 import Register from './components/Register.vue';
 import Login from './components/Login.vue';
 Vue.use(VueRouter);
@@ -35,7 +36,11 @@ const router = new VueRouter({
     }, {
         path: '/forgotten-password',
         name: 'forgotten-password',
-        component : ForgottenPassword,
+        component: ForgottenPassword,
+    },{
+        path: '/reset-password/:token',
+        name: 'reset-password',
+        component: ResetPassword
     }, {
         path: '/dashboard',
         name: 'dashboard',
