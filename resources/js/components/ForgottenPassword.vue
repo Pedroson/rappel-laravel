@@ -47,6 +47,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        app.error = false;
+                        app.serverErrors = false;
                     }, 3000);
                 }
             },
@@ -55,6 +57,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        app.error = false;
+                        app.serverErrors = false;
                     }, 3000);
                 }
             }
@@ -81,6 +85,12 @@
             isFocused($name, $event) {
                 this.index = $name;
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
+            }
+        }, mounted() {
+            if(this.$route.params.errors) {
+                this.error = true;
+                this.alert = true;
+                this.serverErrors = this.$route.params.errors;
             }
         }
     }

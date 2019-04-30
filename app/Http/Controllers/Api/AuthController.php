@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgottenPasswordRequest;
 use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Mail\PasswordReset;
 use App\User;
 use Carbon\Carbon;
@@ -127,7 +128,7 @@ class AuthController extends Controller
             {
                 return response([
                     'status'    => 'error',
-                    'msg'       => 'token expired'
+                    'msg'       => 'reset link expired, please request another'
                 ], 400);
             }
             else
@@ -142,7 +143,35 @@ class AuthController extends Controller
         {
             return response([
                 'status'    => 'error',
-                'msg'       => 'token not recognised'
+                'msg'       => 'reset link invalid, please request another'
+            ], 400);
+        }
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $userEmail = DB::table('password_resets')
+            ->select('email')
+            ->where('token', $request->token)
+            ->first();
+
+        if($userEmail)
+        {
+            $user = User::where('email', $userEmail->email)
+                ->first();
+            $user->password = bcrypt($request->password);
+            $user->save();
+
+            return response([
+                'status'    => 'success',
+                'msg'       => 'password reset'
+            ]);
+        }
+        else
+        {
+            return response([
+                'status'    => 'error',
+                'msg'       => 'reset link invalid, please request another'
             ], 400);
         }
     }

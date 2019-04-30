@@ -7,12 +7,13 @@
         </transition>
         <transition name="fade">
             <div class="alert alert-success" v-if="success && alert">
-                please check your inbox for next steps
+                password successfully reset, you can now login
             </div>
         </transition>
         <div class="form-container">
             <h1>Reset Password</h1>
             <form id="resetPassword" class="rappel-corner" autocomplete="off" @submit.prevent="resetPassword" method="post">
+                <input type="hidden" name="token" v-model="token">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.password && !password) || errors.has('password') }">
                     <label for="password">Password</label>
                     <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" class="form-control" name="password" v-model="password" v-validate="'required|min:6|max:10'" ref="password">
@@ -59,6 +60,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        app.errors = false;
+                        app.serverErrors = false;
                     }, 3000);
                 }
             },
@@ -67,6 +70,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        app.errors = false;
+                        app.serverErrors = false;
                     }, 3000);
                 }
             }
@@ -74,8 +79,10 @@
         methods: {
             resetPassword(){
                 var app = this
-                this.axios.post('/auth/forgotten-password', {
-                    'email': app.email
+                this.axios.post('/auth/reset-password', {
+                    'token': app.token,
+                    'password': app.password,
+                    'password_confirm': app.password_confirm
                 })
                   .then(function(resp) {
                       app.success = true;
@@ -99,10 +106,14 @@
             var app = this;
             this.axios.get('/auth/check-token-validity/'+this.token)
               .then(function(resp) {
-                  console.log(resp);
               })
               .catch(function(resp) {
-                  app.$router.push('/forgotten-password');
+                  app.$router.push({
+                      name: 'forgotten-password',
+                      params: {
+                          errors: resp.response.data.msg
+                      }
+                  });
               });
         }
     }
