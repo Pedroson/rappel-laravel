@@ -43,7 +43,6 @@ class AuthController extends Controller
         {
             return response([
                 'status'    => 'error',
-                'error'     => 'invalid.credentials',
                 'msg'       => 'Invalid Credentials.'
             ], 400);
         }

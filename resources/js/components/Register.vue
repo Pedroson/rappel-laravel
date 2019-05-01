@@ -1,36 +1,36 @@
 <template>
     <div>
-        <div class="alert alert-danger rappel-corner" v-if="error && !success">
+        <div class="alert alert-danger rappel-corner" v-if="alert && error && !success">
             <p>There was an error, unable to complete registration.</p>
         </div>
-        <div class="alert alert-success rappel-corner" v-if="success">
+        <div class="alert alert-success rappel-corner" v-if="alert && success">
             <p>Registration completed. You can now <router-link :to="{name:'login'}">sign in.</router-link></p>
         </div>
         <div class="form-container">
             <h1>Register</h1>
             <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.name && !name) ||  errors.has('name') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
                     <label for="name">Name</label>
                     <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
-                    <span class="help-block" v-if="error && serverErrors.name && !name">{{ tidyError(serverErrors.name) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.name && !name">{{ tidyError(serverErrors.errors.name) }}</span>
                     <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
                 </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.email && !email) || errors.has('email') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.email && !email) || errors.has('email') }">
                     <label for="email">E-mail</label>
                     <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" class="form-control" name="email" v-model="email" v-validate="'required|email'">
-                    <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
                     <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
                 </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.password && !password) || errors.has('password') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.errors.password && !password) || errors.has('password') }">
                     <label for="password">Password</label>
                     <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" class="form-control" name="password" v-model="password" v-validate="'required|min:6|max:10'" ref="password">
-                    <span class="help-block" v-if="error && serverErrors.password && !password">{{ tidyError(serverErrors.password) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.password && !password">{{ tidyError(serverErrors.errors.password) }}</span>
                     <span class="help-block" v-if="errors.has('password')">{{ errors.first('password') }}</span>
                 </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password_confirm') || isActive && password_confirm, 'has-error': (error && serverErrors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password_confirm') || isActive && password_confirm, 'has-error': (error && serverErrors.errors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
                     <label for="password_confirm">Password Confirm</label>
                     <input v-on:focus="isFocused('password_confirm', $event)" v-on:blur="isFocused('password_confirm', $event)" type="password" id="password_confirm" class="form-control" name="password_confirm" v-model="password_confirm" v-validate="'required|min:6|max:10|confirmed:password'" data-vv-as="password">
-                    <span class="help-block" v-if="error && serverErrors.password_confirm && !password_confirm">{{ tidyError(serverErrors.password_confirm) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.password_confirm && !password_confirm">{{ tidyError(serverErrors.errors.password_confirm) }}</span>
                     <span class="help-block" v-if="errors.has('password_confirm')">{{ errors.first('password_confirm') }}</span>
                 </div>
                 <div class="form-group-button">
@@ -50,34 +50,65 @@
                 password: '',
                 password_confirm: '',
                 error: false,
-                serverErrors: {},
+                serverErrors: {
+                    msg: false,
+                    errors: false
+                },
                 success: false,
                 isActive: false,
                 index: false,
+                alert: false
             };
+        },
+        watch: {
+            success: function(val) {
+                if(val === true) {
+                    var app = this;
+                    setTimeout(function() {
+                        app.alert = false;
+                    }, 3000);
+                }
+            },
+            error: function(val) {
+                if(val === true) {
+                    var app = this;
+                    setTimeout(function() {
+                        app.alert = false;
+                    }, 3000);
+                }
+            }
         },
         methods: {
             register(){
-                var app = this
-                this.$auth.register({
-                    data: {
-                        name: app.name,
-                        email: app.email,
-                        password: app.password,
-                        password_confirm: app.password_confirm
-                    },
-                    success: function () {
-                        app.success = true;
-                        app.name = '';
-                        app.email = '';
-                        app.password = '';
-                        app.password_confirm = '';
-                    },
-                    error: function (resp) {
-                        app.error = true;
-                        app.serverErrors = resp.response.data.errors;
-                    },
-                    redirect: null
+                var app = this;
+                this.$validator.validateAll().then(function(result) {
+                    if(result === true) {
+                        app.$auth.register({
+                            data: {
+                                name: app.name,
+                                email: app.email,
+                                password: app.password,
+                                password_confirm: app.password_confirm
+                            },
+                            success: function () {
+                                app.success = true;
+                                app.name = '';
+                                app.email = '';
+                                app.password = '';
+                                app.password_confirm = '';
+                                app.alert = true;
+                            },
+                            error: function (resp) {
+                                app.error = true;
+                                app.alert = true;
+                                app.serverErrors.msg = resp.response.data.msg;
+                                if(resp.response.data.errors) {
+                                    app.serverErrors.errors = resp.response.data.errors;
+                                }
+                            },
+                            redirect: null
+                        });
+                    }
                 });
             },
             tidyError(error) {

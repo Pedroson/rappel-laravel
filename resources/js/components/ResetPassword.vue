@@ -1,12 +1,12 @@
 <template>
     <div>
         <transition name="fade">
-            <div class="alert alert-danger" v-if="error && alert">
+            <div class="alert alert-danger" v-if="alert && error">
                 <p>{{ serverErrors }}</p>
             </div>
         </transition>
         <transition name="fade">
-            <div class="alert alert-success" v-if="success && alert">
+            <div class="alert alert-success" v-if="alert && success">
                 password successfully reset, you can now login
             </div>
         </transition>
@@ -14,16 +14,16 @@
             <h1>Reset Password</h1>
             <form id="resetPassword" class="rappel-corner" autocomplete="off" @submit.prevent="resetPassword" method="post">
                 <input type="hidden" name="token" v-model="token">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.password && !password) || errors.has('password') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.errors.password && !password) || errors.has('password') }">
                     <label for="password">Password</label>
                     <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" class="form-control" name="password" v-model="password" v-validate="'required|min:6|max:10'" ref="password">
-                    <span class="help-block" v-if="error && serverErrors.password && !password">{{ tidyError(serverErrors.password) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.password && !password">{{ tidyError(serverErrors.errors.password) }}</span>
                     <span class="help-block" v-if="errors.has('password')">{{ errors.first('password') }}</span>
                 </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password_confirm') || isActive && password_confirm, 'has-error': (error && serverErrors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password_confirm') || isActive && password_confirm, 'has-error': (error && serverErrors.errors.password_confirm && !password_confirm) || errors.has('password_confirm') }">
                     <label for="password_confirm">Password Confirm</label>
                     <input v-on:focus="isFocused('password_confirm', $event)" v-on:blur="isFocused('password_confirm', $event)" type="password" id="password_confirm" class="form-control" name="password_confirm" v-model="password_confirm" v-validate="'required|min:6|max:10|confirmed:password'" data-vv-as="password">
-                    <span class="help-block" v-if="error && serverErrors.password_confirm && !password_confirm">{{ tidyError(serverErrors.password_confirm) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.password_confirm && !password_confirm">{{ tidyError(serverErrors.errors.password_confirm) }}</span>
                     <span class="help-block" v-if="errors.has('password_confirm')">{{ errors.first('password_confirm') }}</span>
                 </div>
                 <div class="form-group-button">
@@ -42,7 +42,10 @@
                 password: null,
                 password_confirm: null,
                 error: false,
-                serverErrors: {},
+                serverErrors: {
+                    msg: false,
+                    errors: false
+                },
                 success: false,
                 isActive: false,
                 index: false,
@@ -78,21 +81,28 @@
         },
         methods: {
             resetPassword(){
-                var app = this
-                this.axios.post('/auth/reset-password', {
-                    'token': app.token,
-                    'password': app.password,
-                    'password_confirm': app.password_confirm
-                })
-                  .then(function(resp) {
-                      app.success = true;
-                      app.alert = true;
-                  })
-                  .catch(function(resp) {
-                      app.error = true;
-                      app.alert = true;
-                      app.serverErrors = resp.response.data.msg;
-                  });
+                var app = this;
+                this.$validator.validateAll().then(function(result) {
+                    if(result === true) {
+                        app.axios.post('/auth/reset-password', {
+                            'token': app.token,
+                            'password': app.password,
+                            'password_confirm': app.password_confirm
+                        })
+                          .then(function() {
+                              app.success = true;
+                              app.alert = true;
+                          })
+                          .catch(function(resp) {
+                              app.error = true;
+                              app.alert = true;
+                              app.serverErrors.msg = resp.response.data.msg;
+                              if(resp.response.data.errors) {
+                                  app.serverErrors.errors = resp.response.data.errors;
+                              }
+                          });
+                    }
+                });
             },
             tidyError(error) {
                 return error[0];

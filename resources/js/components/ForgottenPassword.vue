@@ -1,22 +1,22 @@
 <template>
     <div>
         <transition name="fade">
-            <div class="alert alert-danger" v-if="error && alert">
-                <p>{{ serverErrors }}</p>
+            <div class="alert alert-danger" v-if="alert && error">
+                <p>{{ serverErrors.msg }}</p>
             </div>
         </transition>
         <transition name="fade">
-            <div class="alert alert-success" v-if="success && alert">
+            <div class="alert alert-success" v-if="alert && success">
                 please check your inbox for next steps
             </div>
         </transition>
         <div class="form-container">
             <h1>Forgotten Password</h1>
             <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.name && !email) ||  errors.has('email') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.name && !email) ||  errors.has('email') }">
                     <label for="email">E-mail</label>
                     <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" name="email" class="form-control" v-model="email" v-validate="'required|email'">
-                    <span class="help-block" v-if="error && serverErrors.email && !email">{{ tidyError(serverErrors.email) }}</span>
+                    <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
                     <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
                 </div>
                 <div class="form-group-button">
@@ -34,7 +34,10 @@
             return {
                 email: null,
                 error: false,
-                serverErrors: {},
+                serverErrors: {
+                    msg: false,
+                    errors: false
+                },
                 success: false,
                 isActive: false,
                 index: false,
@@ -47,8 +50,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
-                        app.error = false;
-                        app.serverErrors = false;
+                        // app.error = false;
+                        // app.serverErrors = false;
                     }, 3000);
                 }
             },
@@ -57,27 +60,34 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
-                        app.error = false;
-                        app.serverErrors = false;
+                        // app.error = false;
+                        // app.serverErrors = false;
                     }, 3000);
                 }
             }
         },
         methods: {
             forgottenPassword(){
-                var app = this
-                this.axios.post('/auth/forgotten-password', {
-                    'email': app.email
-                })
-                  .then(function(resp) {
-                      app.success = true;
-                      app.alert = true;
-                  })
-                  .catch(function(resp) {
-                      app.error = true;
-                      app.alert = true;
-                      app.serverErrors = resp.response.data.msg;
-                  });
+                var app = this;
+                this.$validator.validateAll().then(function(result) {
+                    if(result === true) {
+                        app.axios.post('/auth/forgotten-password', {
+                            'email': app.email
+                        })
+                          .then(function() {
+                              app.success = true;
+                              app.alert = true;
+                          })
+                          .catch(function(resp) {
+                              app.error = true;
+                              app.alert = true;
+                              app.serverErrors.msg = resp.response.data.msg;
+                              if(resp.response.data.errors) {
+                                  app.serverErrors.errors = resp.response.data.errors;
+                              }
+                          });
+                    }
+                });
             },
             tidyError(error) {
                 return error[0];
@@ -90,7 +100,7 @@
             if(this.$route.params.errors) {
                 this.error = true;
                 this.alert = true;
-                this.serverErrors = this.$route.params.errors;
+                this.serverErrors.msg = this.$route.params.errors;
             }
         }
     }
