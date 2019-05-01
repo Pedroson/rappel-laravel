@@ -1,28 +1,28 @@
 <template>
     <div>
-        <div class="alert alert-danger" v-if="alert && error">
-            <p>There was an error, unable to sign in with those credentials.</p>
-        </div>
+        <transition name="fade">
+            <div class="alert alert-danger" v-if="alert && error">
+                <p>{{ serverErrors.msg }}</p>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="alert alert-success" v-if="alert && success">
+                please check your inbox for next steps
+            </div>
+        </transition>
         <div class="form-container">
-            <h1>Login</h1>
-            <form id="login" class="rappel-corner" autocomplete="off" @submit.prevent="login" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.email && !email) ||  errors.has('email') }">
+            <h1>Forgotten Password</h1>
+            <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.name && !email) ||  errors.has('email') }">
                     <label for="email">E-mail</label>
                     <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" name="email" class="form-control" v-model="email" v-validate="'required|email'">
                     <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
                     <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
                 </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.errors.password && !passsword) ||  errors.has('password') }">
-                    <label for="password">Password</label>
-                    <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" name="password" class="form-control" v-model="password" v-validate="'required'">
-                    <span class="help-block" v-if="error && serverErrors.errors.password && !password">{{ tidyError(serverErrors.errors.password) }}</span>
-                    <span class="help-block" v-if="errors.has('password')">{{ errors.first('password') }}</span>
-                </div>
                 <div class="form-group-button">
-                    <button type="submit" class="btn btn-default btn-full">Sign in</button>
+                    <button type="submit" class="btn btn-default btn-full">Send</button>
                 </div>
             </form>
-            <router-link class="forgotten-password-link" :to="{ name: 'forgotten-password' }">forgotten password?</router-link>
         </div>
 
     </div>
@@ -33,7 +33,6 @@
         data(){
             return {
                 email: null,
-                password: null,
                 error: false,
                 serverErrors: {
                     msg: false,
@@ -51,6 +50,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        // app.error = false;
+                        // app.serverErrors = false;
                     }, 3000);
                 }
             },
@@ -59,33 +60,32 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        // app.error = false;
+                        // app.serverErrors = false;
                     }, 3000);
                 }
             }
         },
         methods: {
-            login(){
+            forgottenPassword(){
                 var app = this;
                 this.$validator.validateAll().then(function(result) {
                     if(result === true) {
-                        app.$auth.login({
-                            params: {
-                                email: app.email,
-                                password: app.password
-                            },
-                            success: function () {},
-                            error: function (resp) {
-                                app.error = true;
-                                app.alert = true;
-                                app.serverErrors.msg = resp.response.data.msg;
-                                if(resp.response.data.errors) {
-                                    app.serverErrors.errors = resp.response.data.errors;
-                                }
-                            },
-                            rememberMe: true,
-                            redirect: '/dashboard',
-                            fetchUser: true,
-                        });
+                        app.axios.post('/auth/forgotten-password', {
+                            'email': app.email
+                        })
+                          .then(function() {
+                              app.success = true;
+                              app.alert = true;
+                          })
+                          .catch(function(resp) {
+                              app.error = true;
+                              app.alert = true;
+                              app.serverErrors.msg = resp.response.data.msg;
+                              if(resp.response.data.errors) {
+                                  app.serverErrors.errors = resp.response.data.errors;
+                              }
+                          });
                     }
                 });
             },
@@ -96,12 +96,25 @@
                 this.index = $name;
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
+        }, mounted() {
+            if(this.$route.params.errors) {
+                this.error = true;
+                this.alert = true;
+                this.serverErrors.msg = this.$route.params.errors;
+            }
         }
     }
 </script>
 
 <style lang="scss">
     @import '~@/app.scss';
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
 
     .form-container {
         @include absoluteCenter;
@@ -112,7 +125,7 @@
         }
 
 
-        form#login {
+        form#forgottenPassword {
             background: #fff;
             padding: 1.75rem 1rem 0 1rem;
         }
@@ -166,15 +179,6 @@
                 border-top-right-radius: 0;
                 border-top-left-radius: 0;
             }
-        }
-    }
-
-    .forgotten-password-link {
-        display: inline-block;
-        color: #fff;
-        margin-top: 10px;
-        &:hover {
-            color: #fff;
         }
     }
 </style>

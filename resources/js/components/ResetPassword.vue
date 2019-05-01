@@ -1,26 +1,19 @@
 <template>
     <div>
-        <div class="alert alert-danger rappel-corner" v-if="alert && error && !success">
-            <p>There was an error, unable to complete registration.</p>
-        </div>
-        <div class="alert alert-success rappel-corner" v-if="alert && success">
-            <p>Registration completed. You can now <router-link :to="{name:'login'}">sign in.</router-link></p>
-        </div>
+        <transition name="fade">
+            <div class="alert alert-danger" v-if="alert && error">
+                <p>{{ serverErrors }}</p>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="alert alert-success" v-if="alert && success">
+                password successfully reset, you can now login
+            </div>
+        </transition>
         <div class="form-container">
-            <h1>Register</h1>
-            <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
-                    <label for="name">Name</label>
-                    <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
-                    <span class="help-block" v-if="error && serverErrors.errors.name && !name">{{ tidyError(serverErrors.errors.name) }}</span>
-                    <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
-                </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.email && !email) || errors.has('email') }">
-                    <label for="email">E-mail</label>
-                    <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" class="form-control" name="email" v-model="email" v-validate="'required|email'">
-                    <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
-                    <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
-                </div>
+            <h1>Reset Password</h1>
+            <form id="resetPassword" class="rappel-corner" autocomplete="off" @submit.prevent="resetPassword" method="post">
+                <input type="hidden" name="token" v-model="token">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.errors.password && !password) || errors.has('password') }">
                     <label for="password">Password</label>
                     <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" class="form-control" name="password" v-model="password" v-validate="'required|min:6|max:10'" ref="password">
@@ -34,10 +27,11 @@
                     <span class="help-block" v-if="errors.has('password_confirm')">{{ errors.first('password_confirm') }}</span>
                 </div>
                 <div class="form-group-button">
-                    <button type="submit"class="btn btn-default btn-full">Submit</button>
+                    <button type="submit" class="btn btn-default btn-full">Reset Password</button>
                 </div>
             </form>
         </div>
+
     </div>
 </template>
 
@@ -45,10 +39,8 @@
     export default {
         data(){
             return {
-                name: '',
-                email: '',
-                password: '',
-                password_confirm: '',
+                password: null,
+                password_confirm: null,
                 error: false,
                 serverErrors: {
                     msg: false,
@@ -58,7 +50,12 @@
                 isActive: false,
                 index: false,
                 alert: false
-            };
+            }
+        },
+        computed: {
+            token() {
+                return this.$route.params.token;
+            }
         },
         watch: {
             success: function(val) {
@@ -66,6 +63,8 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        app.errors = false;
+                        app.serverErrors = false;
                     }, 3000);
                 }
             },
@@ -74,40 +73,34 @@
                     var app = this;
                     setTimeout(function() {
                         app.alert = false;
+                        app.errors = false;
+                        app.serverErrors = false;
                     }, 3000);
                 }
             }
         },
         methods: {
-            register(){
+            resetPassword(){
                 var app = this;
                 this.$validator.validateAll().then(function(result) {
                     if(result === true) {
-                        app.$auth.register({
-                            data: {
-                                name: app.name,
-                                email: app.email,
-                                password: app.password,
-                                password_confirm: app.password_confirm
-                            },
-                            success: function () {
-                                app.success = true;
-                                app.name = '';
-                                app.email = '';
-                                app.password = '';
-                                app.password_confirm = '';
-                                app.alert = true;
-                            },
-                            error: function (resp) {
-                                app.error = true;
-                                app.alert = true;
-                                app.serverErrors.msg = resp.response.data.msg;
-                                if(resp.response.data.errors) {
-                                    app.serverErrors.errors = resp.response.data.errors;
-                                }
-                            },
-                            redirect: null
-                        });
+                        app.axios.post('/auth/reset-password', {
+                            'token': app.token,
+                            'password': app.password,
+                            'password_confirm': app.password_confirm
+                        })
+                          .then(function() {
+                              app.success = true;
+                              app.alert = true;
+                          })
+                          .catch(function(resp) {
+                              app.error = true;
+                              app.alert = true;
+                              app.serverErrors.msg = resp.response.data.msg;
+                              if(resp.response.data.errors) {
+                                  app.serverErrors.errors = resp.response.data.errors;
+                              }
+                          });
                     }
                 });
             },
@@ -118,6 +111,20 @@
                 this.index = $name;
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
+        },
+        mounted () {
+            var app = this;
+            this.axios.get('/auth/check-token-validity/'+this.token)
+              .then(function(resp) {
+              })
+              .catch(function(resp) {
+                  app.$router.push({
+                      name: 'forgotten-password',
+                      params: {
+                          errors: resp.response.data.msg
+                      }
+                  });
+              });
         }
     }
 </script>
@@ -125,16 +132,23 @@
 <style lang="scss">
     @import '~@/app.scss';
 
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
+
     .form-container {
         @include absoluteCenter;
         width: 400px;
-        
+
         h1 {
             color: #fff;
         }
 
 
-        form#register {
+        form#resetPassword {
             background: #fff;
             padding: 1.75rem 1rem 0 1rem;
         }
