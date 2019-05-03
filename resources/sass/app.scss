@@ -32,14 +32,18 @@ section.main {
   width: 100%;
   height: 100%;
   position: relative;
-  &.home,
-  &.register,
-  &.login,
-  &.dashboard,
-  &.forgotten-password,
-  &.reset-password {
-    background: $gradient;
+  background: $gradient;
+
+  &.dashboard, &.profile {
+    #header {
+      display: none;
+    }
+    #body {
+      height: 100%;
+    }
+
   }
+
 
   #header {
     height: 100px;
@@ -76,6 +80,9 @@ nav {
 #body {
   position: relative;
   height: calc(100% - 100px);
+  > .parent {
+    height: 100%;
+  }
 }
 
 
@@ -104,6 +111,31 @@ nav {
   }
   @include desktop {
     width: 300px;
+  }
+}
+
+//CONTENT
+#content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 80px);
+  padding: 20px;
+  @include desktop {
+    width: calc(100% - 100px);
+    height: 100%;
+    margin-left: 100px;
+  }
+  .content-header {
+    margin-bottom: 15px;
+    &--text {
+      color: $white;
+      margin: 0;
+    }
+  }
+  .content-body {
+    flex: 1;
+    background: $white;
   }
 }
 

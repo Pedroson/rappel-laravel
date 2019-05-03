@@ -5,6 +5,7 @@ import VueAxios from 'vue-axios';
 import VeeValidate from 'vee-validate';
 import App from './App.vue';
 import Dashboard from './components/Dashboard.vue';
+import Profile from './components/Profile';
 import Home from './components/Home.vue';
 import ForgottenPassword from './components/ForgottenPassword';
 import ResetPassword from './components/ResetPassword';
@@ -45,6 +46,13 @@ const router = new VueRouter({
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard,
+        meta: {
+            auth: true
+        }
+    },{
+        path: '/profile',
+        name: 'profile',
+        component: Profile,
         meta: {
             auth: true
         }

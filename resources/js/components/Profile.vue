@@ -16,12 +16,6 @@
             <div class="menu-item"><img class="img-fluid" src="/svg/ikonate/settings.svg"/></div>
             <div class="menu-item"> <a href="#" @click.prevent="$auth.logout()"><img class="img-fluid" src="/svg/ikonate/exit.svg"/></a></div>
         </div>
-        <div id="content">
-            <div class="content-header">
-                <h1 class="content-header--text">Dashboard</h1>
-            </div>
-            <div class="content-body rappel-corner"></div>
-        </div>
     </div>
 </template>
 
