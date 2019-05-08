@@ -32,7 +32,7 @@
         </div>
         <div id="content">
             <div class="content-header">
-                <h1 class="content-header--text">Dashboard</h1>
+                <h1 class="content-header--text">Profile</h1>
             </div>
             <div class="content-body">
                 <div class="content-section rappel-corner">
@@ -110,7 +110,7 @@
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
         },
-        mounted () {
+        beforeCreate() {
             var app = this;
             app.axios.get('/auth/user')
               .then(function(resp) {
