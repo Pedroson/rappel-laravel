@@ -36,7 +36,10 @@
             </div>
             <div class="content-body">
                 <div class="content-section rappel-corner">
-                    <div class="form-container">
+                    <div class="loader" v-if="loading">
+                        <p>Loading...</p>
+                    </div>
+                    <div class="form-container" v-if="!loading">
                         <form id="updateProfile" autocomplete="off" @submit.prevent="updateProfile" method="post">
                             <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
                                 <label for="name">Name</label>
@@ -77,6 +80,7 @@
                 isActive: false,
                 alert: false,
                 index: false,
+                loading: false
             }
         },
         watch: {
@@ -98,6 +102,25 @@
             }
         },
         methods: {
+            getProfile() {
+                var app = this;
+                app.loading = true;
+                app.axios.get('/auth/user')
+                  .then(function(resp) {
+                      app.name = resp.data.data.name;
+                      app.email = resp.data.data.email;
+                      app.isActive = true;
+                      app.loading = false;
+                  })
+                  .catch(function(resp) {
+                      app.error = true;
+                      app.alert = true;
+                      app.serverErrors.msg = resp.response.data.msg;
+                      if(resp.response.data.errors) {
+                          app.serverErrors.errors = resp.response.data.errors;
+                      }
+                  });
+            },
             updateProfile() {
                 var app = this;
                 app.axiod.post('')
@@ -110,22 +133,8 @@
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name];
             }
         },
-        beforeCreate() {
-            var app = this;
-            app.axios.get('/auth/user')
-              .then(function(resp) {
-                  app.name = resp.data.data.name;
-                  app.email = resp.data.data.email;
-                  app.isActive = true;
-              })
-              .catch(function(resp) {
-                  app.error = true;
-                  app.alert = true;
-                  app.serverErrors.msg = resp.response.data.msg;
-                  if(resp.response.data.errors) {
-                      app.serverErrors.errors = resp.response.data.errors;
-                  }
-              });
+        created() {
+            this.getProfile();
         }
     }
 </script>
