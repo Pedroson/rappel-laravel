@@ -34,7 +34,7 @@ section.main {
   position: relative;
   background: $gradient;
 
-  &.dashboard, &.profile {
+  &.dashboard, &.profile, &.todo, &.reminder, &.settings {
     #header {
       display: none;
     }
@@ -134,8 +134,26 @@ nav {
     }
   }
   .content-body {
+    display: flex;
+    flex-direction: column;
+    @include desktop {
+      flex-direction: row;
+    }
     flex: 1;
+  }
+  .content-section {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: 100%;
+    overflow: hidden;
     background: $white;
+
+    &:not(:last-of-type) {
+      margin-bottom: 20px;
+      @include desktop {
+        margin-right: 20px;
+      }
+    }
   }
 }
 

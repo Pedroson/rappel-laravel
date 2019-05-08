@@ -36,8 +36,6 @@
             </div>
             <div class="content-body">
                 <div class="content-section rappel-corner"></div>
-                <div class="content-section rappel-corner"></div>
-                <div class="content-section rappel-corner"></div>
             </div>
         </div>
     </div>

@@ -3,7 +3,7 @@
         <div class="alert alert-danger" v-if="alert && error">
             <p>There was an error, unable to sign in with those credentials.</p>
         </div>
-        <div class="form-container">
+        <div class="form-container centered">
             <h1>Login</h1>
             <form id="login" class="rappel-corner" autocomplete="off" @submit.prevent="login" method="post">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.email && !email) ||  errors.has('email') }">
@@ -103,7 +103,7 @@
 <style lang="scss">
     @import '~@/app.scss';
 
-    .form-container {
+    .form-container.centered {
         @include absoluteCenter;
         width: 400px;
 

@@ -6,7 +6,7 @@
         <div class="alert alert-success rappel-corner" v-if="alert && success">
             <p>Registration completed. You can now <router-link :to="{name:'login'}">sign in.</router-link></p>
         </div>
-        <div class="form-container">
+        <div class="form-container centered">
             <h1>Register</h1>
             <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" method="post">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
@@ -125,7 +125,7 @@
 <style lang="scss">
     @import '~@/app.scss';
 
-    .form-container {
+    .form-container.centered {
         @include absoluteCenter;
         width: 400px;
         
