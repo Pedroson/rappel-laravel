@@ -11,7 +11,7 @@
             <form id="register" class="rappel-corner" autocomplete="off" @submit.prevent="register" method="post">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
                     <label for="name">Name</label>
-                    <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha'">
+                    <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)" type="text" id="name" class="form-control" name="name" v-model="name" v-validate="'required|alpha_spaces'">
                     <span class="help-block" v-if="error && serverErrors.errors.name && !name">{{ tidyError(serverErrors.errors.name) }}</span>
                     <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
                 </div>

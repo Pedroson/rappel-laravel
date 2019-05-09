@@ -103,8 +103,9 @@ nav {
 //OVERRIDE BOOTSTRAP ALERT STYLE
 .alert {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  top: 1.75rem;
+  left: 50%;
+  transform: translate(-50%);
   width: calc(100% - 4rem);
   @include tablet {
     width: 220px;
@@ -157,6 +158,7 @@ nav {
   }
 }
 
+//LOADING SPINNER
 .loader,
 .loader:after {
   border-radius: 50%;
@@ -164,7 +166,10 @@ nav {
   height: 10em;
 }
 .loader {
-  margin: 40% auto;
+  margin: 20% auto;
+  @include desktop {
+    margin: 40% auto;
+  }
   font-size: 10px;
   position: relative;
   text-indent: -9999em;
