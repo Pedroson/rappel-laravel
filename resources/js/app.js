@@ -5,6 +5,10 @@ import VueAxios from 'vue-axios';
 import VeeValidate from 'vee-validate';
 import App from './App.vue';
 import Dashboard from './components/Dashboard.vue';
+import Profile from './components/Profile';
+import Todo from './components/Todo';
+import Reminder from './components/Reminder';
+import Settings from './components/Settings';
 import Home from './components/Home.vue';
 import ForgottenPassword from './components/ForgottenPassword';
 import ResetPassword from './components/ResetPassword';
@@ -45,6 +49,34 @@ const router = new VueRouter({
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard,
+        meta: {
+            auth: true
+        }
+    },{
+        path: '/profile',
+        name: 'profile',
+        component: Profile,
+        meta: {
+            auth: true
+        }
+    },{
+        path: '/todo',
+        name: 'todo',
+        component: Todo,
+        meta: {
+            auth: true
+        }
+    },{
+        path: '/reminder',
+        name: 'reminder',
+        component: Reminder,
+        meta: {
+            auth: true
+        }
+    },{
+        path: '/settings',
+        name: 'settings',
+        component: Settings,
         meta: {
             auth: true
         }

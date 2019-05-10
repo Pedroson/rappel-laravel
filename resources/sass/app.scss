@@ -32,14 +32,18 @@ section.main {
   width: 100%;
   height: 100%;
   position: relative;
-  &.home,
-  &.register,
-  &.login,
-  &.dashboard,
-  &.forgotten-password,
-  &.reset-password {
-    background: $gradient;
+  background: $gradient;
+
+  &.dashboard, &.profile, &.todo, &.reminder, &.settings {
+    #header {
+      display: none;
+    }
+    #body {
+      height: 100%;
+    }
+
   }
+
 
   #header {
     height: 100px;
@@ -73,9 +77,12 @@ nav {
   border-top-right-radius: 10px;
 }
 
-#body, .parent {
+#body {
   position: relative;
   height: calc(100% - 100px);
+  > .parent {
+    height: 100%;
+  }
 }
 
 
@@ -96,14 +103,104 @@ nav {
 //OVERRIDE BOOTSTRAP ALERT STYLE
 .alert {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  top: 1.75rem;
+  left: 50%;
+  transform: translate(-50%);
   width: calc(100% - 4rem);
   @include tablet {
     width: 220px;
   }
   @include desktop {
     width: 300px;
+  }
+}
+
+//CONTENT
+#content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 80px);
+  padding: 20px;
+  @include desktop {
+    width: calc(100% - 100px);
+    height: 100%;
+    margin-left: 100px;
+  }
+  .content-header {
+    margin-bottom: 15px;
+    &--text {
+      color: $white;
+      margin: 0;
+    }
+  }
+  .content-body {
+    display: flex;
+    flex-direction: column;
+    @include desktop {
+      flex-direction: row;
+    }
+    flex: 1;
+  }
+  .content-section {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: 100%;
+    overflow: hidden;
+    background: $white;
+
+    &:not(:last-of-type) {
+      margin-bottom: 20px;
+      @include desktop {
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+//LOADING SPINNER
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.loader {
+  margin: 20% auto;
+  @include desktop {
+    margin: 40% auto;
+  }
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(0,0,160, 0.2);
+  border-right: 1.1em solid rgba(0,0,160, 0.2);
+  border-bottom: 1.1em solid rgba(0,0,160, 0.2);
+  border-left: 1.1em solid $purple;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 

@@ -10,7 +10,7 @@
                 please check your inbox for next steps
             </div>
         </transition>
-        <div class="form-container">
+        <div class="form-container centered">
             <h1>Forgotten Password</h1>
             <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
                 <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.name && !email) ||  errors.has('email') }">
@@ -67,7 +67,7 @@
             }
         },
         methods: {
-            forgottenPassword(){
+            forgottenPassword() {
                 var app = this;
                 this.$validator.validateAll().then(function(result) {
                     if(result === true) {
@@ -116,7 +116,7 @@
         opacity: 0;
     }
 
-    .form-container {
+    .form-container.centered {
         @include absoluteCenter;
         width: 400px;
 

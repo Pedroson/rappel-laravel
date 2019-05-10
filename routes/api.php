@@ -21,8 +21,10 @@ Route::post('auth/reset-password', 'Api\AuthController@resetPassword');
 Route::get('auth/check-token-validity/{token}', 'Api\AuthController@checkTokenValidity');
 
 Route::group(['middleware' => 'jwt.auth'], function(){
+    //User
     Route::get('auth/user', 'Api\AuthController@user');
     Route::post('auth/logout', 'Api\AuthController@logout');
+    Route::post('auth/user/{id}/update', 'Api\UserController@update');
 });
 Route::group(['middleware' => 'jwt.refresh'], function(){
     Route::get('auth/refresh', 'Api\AuthController@refresh');

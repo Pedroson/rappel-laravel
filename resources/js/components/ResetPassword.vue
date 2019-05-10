@@ -10,7 +10,7 @@
                 password successfully reset, you can now login
             </div>
         </transition>
-        <div class="form-container">
+        <div class="form-container centered">
             <h1>Reset Password</h1>
             <form id="resetPassword" class="rappel-corner" autocomplete="off" @submit.prevent="resetPassword" method="post">
                 <input type="hidden" name="token" v-model="token">
@@ -139,7 +139,7 @@
         opacity: 0;
     }
 
-    .form-container {
+    .form-container.centered {
         @include absoluteCenter;
         width: 400px;
 
