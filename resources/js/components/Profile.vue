@@ -48,7 +48,12 @@
                     <div class="form-container" v-if="!loading">
                         <form id="updateProfile" autocomplete="off" @submit.prevent="updateProfile" method="post" enctype="multipart/form-data">
                             <div class="form-group profile-image">
-                                <img src="/images/profile_picture_placeholder.png" v-if="!profile_picture" class="img-fluid placeholder">
+                                <div class="avatar-container" @mouseover="showProfileAdd = true" @mouseleave="showProfileAdd = false">
+                                    <avatar :username="name" :customStyle="avatarStyles" :src="profile_picture"></avatar>
+                                </div>
+                                <div class="change-profile-picture" v-show="showProfileAdd">
+                                    <img class="img-fluid" src="/svg/ikonate/plus.svg"/>
+                                </div>
                             </div>
                             <div class="form-group overlap"
                                  v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
@@ -81,7 +86,12 @@
 </template>
 
 <script>
+    import Avatar from 'vue-avatar';
+
     export default {
+        components: {
+          Avatar
+        },
         data () {
             return {
                 id: '',
@@ -97,7 +107,14 @@
                 isActive: false,
                 alert: false,
                 index: false,
-                loading: false
+                loading: false,
+                avatarStyles: {
+                    'width': '120px',
+                    'height': '120px',
+                    'font': '45px Helvetica, Arial, sans-serif',
+                    'margin': 'auto'
+                },
+                showProfileAdd: false
             }
         },
         watch: {
@@ -206,17 +223,17 @@
             margin-bottom: 1.75rem;
 
             &.profile-image {
-
-                img.placeholder {
-                    display: block;
-                    width: 120px;
-                    @include tablet {
-                        width: 140px;
+                .change-profile-picture {
+                    position: absolute;
+                    top: 70%;
+                    left: 53%;
+                    background: #fff;
+                    border-radius: 50%;
+                    box-shadow: 1px 1px 8px -3px rgba(0,0,0,0.75);
+                    cursor: pointer;
+                    img {
+                        width: 40px;
                     }
-                    @include desktop {
-                        width: 160px;
-                    }
-                    margin: auto;
                 }
             }
 
