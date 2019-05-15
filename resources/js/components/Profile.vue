@@ -47,12 +47,13 @@
                     </div>
                     <div class="form-container" v-if="!loading">
                         <form id="updateProfile" autocomplete="off" @submit.prevent="updateProfile" method="post" enctype="multipart/form-data">
+                            <input type="file" name="profile_picture" id="profile_picture" ref="profile_picture" v-on:change="updateProfilePicture($event)">
                             <div class="form-group profile-image">
-                                <div class="avatar-container" @mouseover="showProfileAdd = true" @mouseleave="showProfileAdd = false">
+                                <div class="avatar-container" v-on:mouseover.self="showProfileAdd = true" v-on:mouseleave.self="showProfileAdd = false">
                                     <avatar :username="name" :customStyle="avatarStyles" :src="profile_picture"></avatar>
-                                </div>
-                                <div class="change-profile-picture" v-show="showProfileAdd">
-                                    <img class="img-fluid" src="/svg/ikonate/plus.svg"/>
+                                    <div class="change-profile-picture" v-show="showProfileAdd" v-on:click="clickEvent($event)">
+                                        <img class="img-fluid" src="/svg/ikonate/plus.svg"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group overlap"
@@ -176,6 +177,13 @@
                       }
                   })
             },
+            updateProfilePicture($event) {
+
+            },
+            clickEvent($event) {
+                var elem = this.$refs.profile_picture;
+                elem.click();
+            },
             tidyError (error) {
                 return error[0]
             },
@@ -215,6 +223,11 @@
             height: 100%;
             background: #fff;
             padding: 1.75rem 1rem 0 1rem;
+
+            #profile_picture {
+                position: absolute;
+                top: -1000px;
+            }
         }
 
         .form-group {
@@ -223,6 +236,12 @@
             margin-bottom: 1.75rem;
 
             &.profile-image {
+                .avatar-container {
+                    width: 140px;
+                    height: 140px;
+                    padding: 10px;
+                    margin: auto;
+                }
                 .change-profile-picture {
                     position: absolute;
                     top: 70%;
@@ -231,6 +250,7 @@
                     border-radius: 50%;
                     box-shadow: 1px 1px 8px -3px rgba(0,0,0,0.75);
                     cursor: pointer;
+                    z-index: 15;
                     img {
                         width: 40px;
                     }
