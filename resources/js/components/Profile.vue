@@ -113,7 +113,8 @@
                     'width': '120px',
                     'height': '120px',
                     'font': '45px Helvetica, Arial, sans-serif',
-                    'margin': 'auto'
+                    'margin': 'auto',
+                    'background-size': '120px 120px'
                 },
                 showProfileAdd: false
             }
@@ -145,6 +146,9 @@
                       app.id = resp.data.data.id
                       app.name = resp.data.data.name
                       app.email = resp.data.data.email
+                      if(resp.data.data.profile_picture) {
+                          app.profile_picture = '/storage/profile_pictures/'+app.id+'/'+resp.data.data.profile_picture;
+                      }
                       app.isActive = true
                       app.loading = false
                   })
@@ -178,7 +182,23 @@
                   })
             },
             updateProfilePicture($event) {
-
+                var app = this,
+                    formData = new FormData();
+                formData.append('profile_picture', app.$refs.profile_picture.files[0]);
+                app.axios.post('/auth/user/' + app.id + '/update/profile-picture',
+                  formData,
+                  {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                  .then(function (resp) {
+                        console.log(resp);
+                        app.profile_picture = '/storage/' + resp.data.data;
+                  })
+                  .catch(function (resp) {
+                      console.log(resp);
+                  })
             },
             clickEvent($event) {
                 var elem = this.$refs.profile_picture;

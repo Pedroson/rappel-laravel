@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfilePictureRequest;
 use App\Http\Requests\UpdateFormRequest;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -23,6 +25,37 @@ class UserController extends Controller
                 'status'    => 'success',
                 'msg'       => 'profile has been updated'
             ], 200);
+        }
+
+        return response([
+            'status'    => 'error',
+            'msg'       => 'user not recognised'
+        ], 400);
+    }
+
+    public function updateProfilePicture(ProfilePictureRequest $request, $id)
+    {
+        $user = User::find($id);
+
+        if($user)
+        {
+            $fileName = str_random().'.'.$request->profile_picture->getClientOriginalExtension();
+            if($file = $request->profile_picture->storeAs('profile_pictures/'.$id, $fileName)) {
+                $user->profile_picture = $fileName;
+                $user->save();
+                return response([
+                    'status'    => 'success',
+                    'msg'       => 'profile picture updated',
+                    'data'      => $file
+                ], 200);
+            }
+            else
+            {
+                return response([
+                    'status'    => 'error',
+                    'msg'       => 'problem saving image'
+                ], 400);
+            }
         }
 
         return response([

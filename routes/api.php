@@ -25,6 +25,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::get('auth/user', 'Api\AuthController@user');
     Route::post('auth/logout', 'Api\AuthController@logout');
     Route::post('auth/user/{id}/update', 'Api\UserController@update');
+    Route::post('auth/user/{id}/update/profile-picture', 'Api\UserController@updateProfilePicture');
 });
 Route::group(['middleware' => 'jwt.refresh'], function(){
     Route::get('auth/refresh', 'Api\AuthController@refresh');
