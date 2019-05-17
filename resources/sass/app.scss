@@ -35,15 +35,21 @@ section.main {
   background: $gradient;
 
   &.dashboard, &.profile, &.todo, &.reminder, &.settings {
-    #header {
-      display: none;
-    }
+    //#header {
+    //  display: none;
+    //}
     #body {
       height: 100%;
     }
 
   }
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
 
   #header {
     height: 100px;

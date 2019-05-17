@@ -1,6 +1,6 @@
 <template>
     <section class="main" v-bind:class="this.$route.name">
-        <div id="header" class="container-fluid">
+        <div id="header" class="container-fluid" v-if="showHeader()">
             <div class="row">
                 <div class="col-2">
                     <router-link :to="{ name: 'home' }">
@@ -28,11 +28,32 @@
             </div>
         </div>
         <div id="body">
-            <router-view class="parent"></router-view>
+            <menu-component v-if="showMenu()"></menu-component>
+            <transition name="fade" mode="out-in">
+                <router-view class="parent"></router-view>
+            </transition>
         </div>
         <div class="footer"></div>
     </section>
 </template>
+
+<script>
+    export default {
+        data() {
+            return {
+
+            }
+        },
+        methods: {
+            showHeader() {
+                return this.$route.name == 'home' || this.$route.name == 'login' || this.$route.name == 'register' || this.$route.name == 'forgotten-password' || this.$route.name == 'reset-password';
+            },
+            showMenu() {
+                return this.$route.name != 'home' && this.$route.name != 'login' && this.$route.name != 'register' && this.$route.name != 'forgotten-password' && this.$route.name != 'reset-password';
+            }
+        }
+    }
+</script>
 
 <style lang="scss">
     //@import '~@/app.scss';

@@ -82,6 +82,7 @@ const router = new VueRouter({
         }
     }]
 });
+Vue.component('menu-component', require('./components/Menu.vue').default);
 Vue.router = router
 Vue.use(require('@websanova/vue-auth'), {
     auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
