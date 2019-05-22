@@ -18,33 +18,37 @@
                     </div>
                     <div class="form-container full-height" v-if="!loading">
                         <form id="updateProfile" autocomplete="off" @submit.prevent="updateProfile" method="post" enctype="multipart/form-data">
-                            <input type="file" name="profile_picture" id="profile_picture" ref="profile_picture" v-on:change="updateProfilePicture($event)">
-                            <div class="form-group profile-image">
-                                <div class="avatar-container" v-on:mouseover.self="showProfileAdd = true" v-on:mouseleave.self="showProfileAdd = false">
-                                    <avatar :username="name" :customStyle="avatarStyles" :src="profile_picture"></avatar>
-                                    <div class="change-profile-picture" v-show="showProfileAdd" v-on:click="clickEvent($event)">
-                                        <img class="img-fluid" src="/svg/ikonate/plus.svg"/>
+                            <simplebar data-simplebar-auto-hide="false">
+                                <div class="form-body">
+                                    <input type="file" name="profile_picture" id="profile_picture" ref="profile_picture" v-on:change="updateProfilePicture($event)">
+                                    <div class="form-group profile-image">
+                                        <div class="avatar-container" v-on:mouseover.self="showProfileAdd = true" v-on:mouseleave.self="showProfileAdd = false">
+                                            <avatar :username="name" :customStyle="avatarStyles" :src="profile_picture"></avatar>
+                                            <div class="change-profile-picture" v-show="showProfileAdd" v-on:click="clickEvent($event)">
+                                                <img class="img-fluid" src="/svg/ikonate/plus.svg"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group overlap"
+                                         v-bind:class="{ 'active': (isActive && index === 'name') || name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
+                                        <label for="name">Name</label>
+                                        <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)"
+                                               type="text" id="name" class="form-control" name="name" v-model="name"
+                                               v-validate="'required|alpha_spaces'">
+                                        <span class="help-block" v-if="error && serverErrors.errors.name && !name">{{ tidyError(serverErrors.errors.name) }}</span>
+                                        <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
+                                    </div>
+                                    <div class="form-group overlap"
+                                         v-bind:class="{ 'active': (isActive && index === 'email') || email, 'has-error': (error && serverErrors.errors.email && !email) || errors.has('email') }">
+                                        <label for="email">E-mail</label>
+                                        <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)"
+                                               type="email" id="email" class="form-control" name="email" v-model="email"
+                                               v-validate="'required|email'">
+                                        <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
+                                        <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group overlap"
-                                 v-bind:class="{ 'active': (isActive && index === 'name') || isActive && name, 'has-error': (error && serverErrors.errors.name && !name) ||  errors.has('name') }">
-                                <label for="name">Name</label>
-                                <input v-on:focus="isFocused('name', $event)" v-on:blur="isFocused('name', $event)"
-                                       type="text" id="name" class="form-control" name="name" v-model="name"
-                                       v-validate="'required|alpha_spaces'">
-                                <span class="help-block" v-if="error && serverErrors.errors.name && !name">{{ tidyError(serverErrors.errors.name) }}</span>
-                                <span class="help-block" v-if="errors.has('name')">{{ errors.first('name') }}</span>
-                            </div>
-                            <div class="form-group overlap"
-                                 v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.email && !email) || errors.has('email') }">
-                                <label for="email">E-mail</label>
-                                <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)"
-                                       type="email" id="email" class="form-control" name="email" v-model="email"
-                                       v-validate="'required|email'">
-                                <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
-                                <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
-                            </div>
+                            </simplebar>
                             <div class="form-group-button fixed-btm">
                                 <button type="submit" class="btn btn-default btn-full">Update profile</button>
                             </div>
@@ -59,10 +63,13 @@
 
 <script>
     import Avatar from 'vue-avatar';
+    import Simplebar from 'simplebar-vue';
+    //import 'simplebar-vue/dist/simplebar.min.css';
 
     export default {
         components: {
-          Avatar
+          'avatar': Avatar,
+          'simplebar': Simplebar
         },
         data () {
             return {
@@ -218,6 +225,19 @@
             #profile_picture {
                 position: absolute;
                 top: -1000px;
+            }
+        }
+
+        .form-body {
+            overflow-y: scroll;
+            height: 100%;
+            padding-bottom: 50px;
+            margin: 0px -15px;
+            @include desktop {
+                overflow-y: initial;
+                height: 100%;
+                padding-bottom: 0;
+                margin: 0;
             }
         }
 
