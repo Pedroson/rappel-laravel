@@ -13,7 +13,7 @@
         <div class="form-container centered">
             <h1>Forgotten Password</h1>
             <form id="forgottenPassword" class="rappel-corner" autocomplete="off" @submit.prevent="forgottenPassword" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.name && !email) ||  errors.has('email') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || email, 'has-error': (error && serverErrors.errors.name && !email) ||  errors.has('email') }">
                     <label for="email">E-mail</label>
                     <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" name="email" class="form-control" v-model="email" v-validate="'required|email'">
                     <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>

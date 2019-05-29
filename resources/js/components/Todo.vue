@@ -6,7 +6,8 @@
                 <h1 class="content-header--text">Todo</h1>
             </div>
             <div class="content-body">
-                <div class="content-section rappel-corner"></div>
+                <div class="content-section rappel-corner flex-basis-30"></div>
+                <div class="content-section rappel-corner flex-basis-70"></div>
             </div>
         </div>
     </div>

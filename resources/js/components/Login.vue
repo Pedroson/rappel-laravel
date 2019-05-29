@@ -6,13 +6,13 @@
         <div class="form-container centered">
             <h1>Login</h1>
             <form id="login" class="rappel-corner" autocomplete="off" @submit.prevent="login" method="post">
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || isActive && email, 'has-error': (error && serverErrors.errors.email && !email) ||  errors.has('email') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'email') || email, 'has-error': (error && serverErrors.errors.email && !email) ||  errors.has('email') }">
                     <label for="email">E-mail</label>
                     <input v-on:focus="isFocused('email', $event)" v-on:blur="isFocused('email', $event)" type="email" id="email" name="email" class="form-control" v-model="email" v-validate="'required|email'">
                     <span class="help-block" v-if="error && serverErrors.errors.email && !email">{{ tidyError(serverErrors.errors.email) }}</span>
                     <span class="help-block" v-if="errors.has('email')">{{ errors.first('email') }}</span>
                 </div>
-                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || isActive && password, 'has-error': (error && serverErrors.errors.password && !passsword) ||  errors.has('password') }">
+                <div class="form-group overlap" v-bind:class="{ 'active': (isActive && index === 'password') || password, 'has-error': (error && serverErrors.errors.password && !passsword) ||  errors.has('password') }">
                     <label for="password">Password</label>
                     <input v-on:focus="isFocused('password', $event)" v-on:blur="isFocused('password', $event)" type="password" id="password" name="password" class="form-control" v-model="password" v-validate="'required'">
                     <span class="help-block" v-if="error && serverErrors.errors.password && !password">{{ tidyError(serverErrors.errors.password) }}</span>
