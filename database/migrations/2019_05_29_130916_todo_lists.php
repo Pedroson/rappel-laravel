@@ -18,7 +18,10 @@ class TodoLists extends Migration
            $table->unsignedInteger('user_id');
            $table->string('name');
            $table->string('slug');
+           $table->softDeletes();
            $table->timestamps();
+           $table->index('user_id');
+           $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

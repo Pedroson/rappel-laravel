@@ -6,7 +6,11 @@
                 <h1 class="content-header--text">Todo</h1>
             </div>
             <div class="content-body">
-                <div class="content-section rappel-corner flex-basis-30"></div>
+                <div class="content-section rappel-corner flex-basis-30">
+                    <div class="new-list-container"></div>
+                    <button>Add new list</button>
+                    <input name="new_list_name" :value="new_list_name">
+                </div>
                 <div class="content-section rappel-corner flex-basis-70"></div>
             </div>
         </div>
@@ -17,7 +21,7 @@
     export default {
         data() {
             return {
-
+                new_list_name: ''
             }
         }
     }

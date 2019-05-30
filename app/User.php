@@ -28,4 +28,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function TodoList()
+    {
+        return $this->hasMany('App\TodoList');
+    }
+
 }
