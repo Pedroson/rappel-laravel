@@ -20,7 +20,8 @@ class TodoListController extends Controller
 
         return response([
             'status'    => 'success',
-            'msg'       => 'new list saved'
+            'msg'       => 'new list saved',
+            'payload'      => $list
         ], 200);
     }
 }

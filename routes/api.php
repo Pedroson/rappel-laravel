@@ -27,7 +27,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::post('auth/user/{id}/update', 'Api\UserController@update');
     Route::post('auth/user/{id}/update/profile-picture', 'Api\UserController@updateProfilePicture');
     //Todo List
-    Route::post('todo/list/create');
+    Route::post('auth/todo/list/create', 'Api\TodoListController@store');
 });
 Route::group(['middleware' => 'jwt.refresh'], function(){
     Route::get('auth/refresh', 'Api\AuthController@refresh');
