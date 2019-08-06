@@ -14,13 +14,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
 
+    /**
+     * Creates and saves a new user model
+     * @param RegisterFormRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function register(RegisterFormRequest $request)
     {
         $user = new User();
@@ -35,6 +39,11 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Attempts to verify and login user
+     * @param LoginFormRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function login(LoginFormRequest $request)
     {
         $credentials = $request->only('email', 'password');
@@ -54,6 +63,10 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * Log out user
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function logout()
     {
         JWTAuth::invalidate();
@@ -64,6 +77,11 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Returns user model form currently authenticated user
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
@@ -73,6 +91,11 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Refreshes the current JWT token, there is no method body as this is handled via
+     * the JWT refresh middleware
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function refresh()
     {
         return response([
@@ -80,6 +103,11 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Creates and saves a password reset record, sends password reset email to the user
+     * @param ForgottenPasswordRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function forgottenPassword(ForgottenPasswordRequest $request)
     {
         $user = User::where('email', $request->email)
@@ -111,6 +139,11 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * Checks to see if a users password reset token has expired
+     * @param $token
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function checkTokenValidity($token)
     {
         $validity = null;
@@ -147,6 +180,11 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Updates the users password
+     * @param ResetPasswordRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function resetPassword(ResetPasswordRequest $request)
     {
         $userEmail = DB::table('password_resets')

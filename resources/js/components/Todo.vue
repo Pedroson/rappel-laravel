@@ -20,7 +20,13 @@
                             </div>
                         </form>
                     </div>
-                    <div class="new-list-container"></div>
+                    <div class="list-container">
+                        <ul>
+                            <li v-for="list in lists" v-bind:data-id="list.id">
+                                {{ list.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="content-section rappel-corner flex-basis-70"></div>
             </div>
@@ -91,6 +97,25 @@
                     }
                 });
             },
+            getLists() {
+                let app = this;
+                app.axios.get('/auth/todo/list/index')
+                  .then(function (resp) {
+                      app.success = true;
+                      app.serverErrors.msg = resp.data.msg;
+                      resp.data.payload.forEach(function(item){
+                          app.lists.push((item));
+                      })
+                  })
+                  .catch(function (resp) {
+                      app.error = true
+                      app.alert = true
+                      app.serverErrors.msg = resp.response.data.msg
+                      if (resp.response.data.errors) {
+                          app.serverErrors.errors = resp.response.data.errors
+                      }
+                  })
+            },
             tidyError (error) {
                 return error[0]
             },
@@ -98,6 +123,9 @@
                 this.index = $name
                 this.isActive = $event.type === 'focus' || $event.type === 'blur' && this[$name]
             }
+        },
+        mounted () {
+            this.getLists();
         }
     }
 </script>
@@ -115,7 +143,7 @@
     }
 
     .form-container {
-        height: 100%;
+        height: 20%;
 
         h1 {
             color: #fff;
@@ -233,6 +261,10 @@
                 z-index: 10;
             }
         }
+    }
+
+    .list-container {
+        height: 80%;
     }
 
     #menu {

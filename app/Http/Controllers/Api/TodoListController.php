@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Auth;
 
 class TodoListController extends Controller
 {
+    public function index(Request $request)
+    {
+        $lists = TodoList::where('user_id', Auth::user()->id)
+            ->get();
+
+        return response([
+            'status'    => 'success',
+            'payload'   => $lists
+        ], 200);
+    }
+
     public function store(CreateTodoListRequest $request)
     {
         $list = new TodoList();
