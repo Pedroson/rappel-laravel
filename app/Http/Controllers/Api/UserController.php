@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\SystemException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfilePictureRequest;
 use App\Http\Requests\UpdateUserFormRequest;
 use App\Repositories\UserRepository;
 use App\User;
 use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -18,35 +21,32 @@ class UserController extends Controller
         $this->UserRepository = $UserRepository;
     }
 
+    /**
+     * Updates user record in database
+     *
+     * @param UpdateUserFormRequest $request
+     * @param $id
+     * @return ResponseFactory|Response
+     * @throws SystemException
+     */
     public function update(UpdateUserFormRequest $request, $id)
     {
         $user = User::find($id);
+        return $this->UserRepository->update($user, $request);
 
-        if($user)
-        {
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->save();
-
-            return response([
-                'status'    => 'success',
-                'msg'       => 'profile has been updated'
-            ], 200);
-        }
-
-        return response([
-            'status'    => 'error',
-            'msg'       => 'user not recognised'
-        ], 400);
     }
 
+    /**
+     * Updates users profile picture in database and file storage
+     *
+     * @param ProfilePictureRequest $request
+     * @param $id
+     * @return ResponseFactory|Response
+     * @throws SystemException
+     */
     public function updateProfilePicture(ProfilePictureRequest $request, $id)
     {
         $user = User::find($id);
-        $this->UserRepository->updateProfilePicture($user, $request);
-        return response()->json([
-            'status'    => 'success',
-            'msg'       => 'profile picture updated'
-        ], 200);
+        return $this->UserRepository->updateProfilePicture($user, $request);
     }
 }

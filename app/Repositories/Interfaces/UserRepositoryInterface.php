@@ -12,7 +12,7 @@ interface UserRepositoryInterface
 
     public function get(User $user);
 
-    public function update(UpdateUserFormRequest $request);
+    public function update(User $user, UpdateUserFormRequest $request);
 
     public function updateProfilePicture(User $user, ProfilePictureRequest $request);
 

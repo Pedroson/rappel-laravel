@@ -10,7 +10,9 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Mail\PasswordReset;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,8 +24,9 @@ class AuthController extends Controller
 
     /**
      * Creates and saves a new user model
+     *
      * @param RegisterFormRequest $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function register(RegisterFormRequest $request)
     {
@@ -41,8 +44,9 @@ class AuthController extends Controller
 
     /**
      * Attempts to verify and login user
+     *
      * @param LoginFormRequest $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function login(LoginFormRequest $request)
     {
@@ -65,7 +69,8 @@ class AuthController extends Controller
 
     /**
      * Log out user
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     *
+     * @return ResponseFactory|Response
      */
     public function logout()
     {
@@ -79,8 +84,9 @@ class AuthController extends Controller
 
     /**
      * Returns user model form currently authenticated user
+     *
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function user(Request $request)
     {
@@ -94,7 +100,8 @@ class AuthController extends Controller
     /**
      * Refreshes the current JWT token, there is no method body as this is handled via
      * the JWT refresh middleware
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     *
+     * @return ResponseFactory|Response
      */
     public function refresh()
     {
@@ -105,8 +112,9 @@ class AuthController extends Controller
 
     /**
      * Creates and saves a password reset record, sends password reset email to the user
+     *
      * @param ForgottenPasswordRequest $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function forgottenPassword(ForgottenPasswordRequest $request)
     {
@@ -141,8 +149,9 @@ class AuthController extends Controller
 
     /**
      * Checks to see if a users password reset token has expired
+     *
      * @param $token
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function checkTokenValidity($token)
     {
@@ -182,8 +191,9 @@ class AuthController extends Controller
 
     /**
      * Updates the users password
+     *
      * @param ResetPasswordRequest $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function resetPassword(ResetPasswordRequest $request)
     {
